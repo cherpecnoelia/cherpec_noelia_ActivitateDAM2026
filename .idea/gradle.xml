@@ -10,6 +10,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/sem4_dam" />
+            <option value="$PROJECT_DIR$/sem5" />
           </set>
         </option>
       </GradleProjectSettings>
