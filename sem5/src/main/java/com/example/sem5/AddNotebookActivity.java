@@ -1,6 +1,5 @@
 package com.example.sem5;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -14,7 +13,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 
 public class AddNotebookActivity extends AppCompatActivity {
 
@@ -39,10 +37,29 @@ public class AddNotebookActivity extends AppCompatActivity {
         swArchive = findViewById(R.id.swArchive);
         btnSave = findViewById(R.id.btnSave);
 
-        // Populare Spinner
+
         String[] priorities = {"Scăzută", "Medie", "Ridicată"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, priorities);
         spPriority.setAdapter(adapter);
+
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("notebook_key")) {
+            Notebook notebook = intent.getParcelableExtra("notebook_key");
+
+            if (notebook != null) {
+                etTitle.setText(notebook.getTitle());
+                cbImportant.setChecked(notebook.isImportant());
+                ratingBar.setRating(notebook.getPriorityRating());
+                swArchive.setChecked(notebook.isArchived());
+
+                if ("Muncă".equals(notebook.getCategory())) {
+                    rgCategory.check(R.id.rbWork);
+                } else {
+                    rgCategory.check(R.id.rbPersonal);
+                }
+            }
+        }
 
         btnSave.setOnClickListener(v -> {
             String title = etTitle.getText().toString();
@@ -57,10 +74,10 @@ public class AddNotebookActivity extends AppCompatActivity {
 
             Notebook notebook = new Notebook(title, isImportant, category, rating, isArchived);
 
-            // Trimitere obiect prin Bundle înapoi în prima activitate
+
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("notebook_key", notebook);
+            bundle.putParcelable("notebook_key", notebook);
             resultIntent.putExtras(bundle);
 
             setResult(RESULT_OK, resultIntent);

@@ -67,7 +67,7 @@ public class AddNotebookAiActivity extends AppCompatActivity {
 
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("notebook_key", notebook);
+            bundle.putParcelable("notebook_key", notebook);
             resultIntent.putExtras(bundle);
 
             setResult(RESULT_OK, resultIntent);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,21 +19,30 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAddAi;
     private Button btnViewList;
 
-
     private ArrayList<Notebook> notebookList = new ArrayList<>();
 
     private final ActivityResultLauncher<Intent> addNotebookLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Bundle bundle = result.getData().getExtras();
-                    if (bundle != null) {
-                        Notebook notebook = (Notebook) bundle.getSerializable("notebook_key");
-                        if (notebook != null) {
-                            notebookList.add(notebook);
-                            tvResult.setText("Total notițe salvate: " + notebookList.size());
-                            Toast.makeText(MainActivity.this, "Notiță adăugată în listă!", Toast.LENGTH_SHORT).show();
-                        }
+                    Notebook notebook = result.getData().getParcelableExtra("notebook_key");
+                    if (notebook != null) {
+                        notebookList.add(notebook);
+                        tvResult.setText("Total notițe salvate: " + notebookList.size());
+                        Toast.makeText(MainActivity.this, "Notiță adăugată în listă!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<Intent> displayListLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    ArrayList<Notebook> listaActualizata = result.getData().getParcelableArrayListExtra("notebook_list_key");
+                    if (listaActualizata != null) {
+                        notebookList = listaActualizata;
+                        tvResult.setText("Total notițe salvate: " + notebookList.size());
                     }
                 }
             }
@@ -58,11 +68,10 @@ public class MainActivity extends AppCompatActivity {
             addNotebookLauncher.launch(intent);
         });
 
-
         btnViewList.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, DisplayListActivity.class);
-            intent.putExtra("notebook_list_key", notebookList);
-            startActivity(intent);
+            intent.putParcelableArrayListExtra("notebook_list_key", notebookList);
+            displayListLauncher.launch(intent);
         });
     }
 }
