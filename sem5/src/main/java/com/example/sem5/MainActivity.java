@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAddAi;
     private Button btnViewList;
 
+    private Button btnImagini;
+
     private ArrayList<Notebook> notebookList = new ArrayList<>();
 
     private final ActivityResultLauncher<Intent> addNotebookLauncher = registerForActivityResult(
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         btnAdd = findViewById(R.id.btnAdd);
         btnAddAi = findViewById(R.id.btnAddAi);
         btnViewList = findViewById(R.id.btnViewList);
+        btnImagini = findViewById(R.id.btnImagini);
+
 
         btnAdd.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AddNotebookActivity.class);
@@ -72,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, DisplayListActivity.class);
             intent.putParcelableArrayListExtra("notebook_list_key", notebookList);
             displayListLauncher.launch(intent);
+        });
+        btnImagini.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ImaginiActivity.class);
+            startActivity(intent);
         });
     }
 }
